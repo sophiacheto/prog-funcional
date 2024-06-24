@@ -1,0 +1,168 @@
+LISTAS INFINITAS ================
+
+repeat :: a -> [a]
+repeat x = xs where xs = x:xs
+-- repeat x = x:x:x:...
+
+cycle :: [a] -> [a]
+cycle [] = error "empty list"
+cycle xs = xs' where xs' = xs++xs'
+-- cycle xs = xs++xs++xs++...
+
+iterate :: (a->a) -> a -> [a]
+iterate f x = x : iterate f (f x)
+-- iterate f x = x: f x: f(f x): f(f(f x)): ...
+
+
+PROGRAMAS INTERATIVOS
+getChar :: IO Char          -- ler um carater
+putChar :: Char -> IO ()    -- imprimir um carater
+return :: a -> IO a         -- retornar um valor sem fazer qualquer interação
+
+NOTAÇÃO DO
+ação = do x <- getChar
+          putChar x
+          putChar x
+
+
+FUNÇÕES
+putChar :: Char -> IO ()    -- escreve um carater
+putStr :: String -> IO ()   -- printa a String
+putStrLn :: String -> IO () -- printa a String com \n no fim
+print :: Show a => a -> IO () -- imprimir um valor
+getChar :: IO Char          -- ler um caracter
+getLine :: IO String        -- lê caracteres até uma mudança de linha
+getContents :: IO String -- ler toda a entrada padrão
+
+
+
+
+NOVOS TIPOS ==========
+
+
+SINONIMO - definir um novo nome para um tipo existente
+> type String = [Char]
+> type Carta naipe valor = (naipe, valor)
+
+
+NOVOS TIPOS - declaramos todos os valores possíveis (construtores) para esse tipo
+> data Season = Winter | Summer | Spring | Autumn
+> data Shape = Circ Float | Rect Float Float
+*podem ser declarações recursivas
+
+FUNÇÕES PARA NOVOS TIPOS - precisamos "abrir" o novo tipo em padrões para usar seus parâmetros
+area :: Shape -> Float
+area (Circ radius) = pi*radius^2
+area (Rect width height) = width*height
+
+ADICIONAR PARÂMETROS DE COMPARAÇÃO E PRINT 
+> data Season = Winter | Summer | Spring | Autumn
+               deriving (Eq, Show)
+
+
+ARVORES ============
+data Arv a = No a (Arv a) (Arv a) -- nó
+            | Vazia -- folha
+
+
+
+
+COMO PROVAR INDUTIVAMENTE? ==========
+
+Vamos mostrar que
+        > expressão a ser provada
+para todo __, com base nas seguintes definições:
+
+> definições das funções usadas
+> ...
+
+Faremos a prova por indução sobre __.
+
+
+CASO BASE = __
+Queremos provar {expressão com o caso base substituido}
+
+Começando pelo lado esquerdo e simplificando:
+expressao
+{equação usada}
+= expressao
+{equação dnv}
+= expressao
+
+* Como queriamos mostrar.
+ou
+* Simplificando o lado direito:
+* ...
+* Como obtemos o mesmo resultado em ambos os caso,
+fica provado o caso base.
+
+
+
+CASO INDUTIVO:
+
+Hipótese de indução:
+        {expressão menor que o caso geral | expressão a ser provada}
+Tese de indução:
+        {expressão a ser provada | expressão maior que o caso geral}
+
+Começando pelo lado esquerdo da tese:
+expressao
+{equação usada}
+= expressao
+{hipotese de indução}
+= expressao
+
+
+Como queriamos mostrar.
+
+
+
+
+CASOS ESPECIAIS =================
+
+
+LISTAS
+Queremos provar: P(xs) para todo xs
+Caso base: P([])
+Hipotese de indução: P(xs)
+Tese: P(x:xs) para todo x, xs
+
+
+ARVORES
+Queremos provar: P(t) para toda a árvore t
+Caso base = P(Vazia)
+Hipotese de indução: P(esq) ∧ P(dir) 
+Tese: P(No x esq dir)
+
+
+NATURAIS
+Queremos provar: P(n) para todo n
+Caso base: P(Zero)
+Hipotese de indução: P(n)
+Tese: P(Succ n) para todo n
+
+
+
+
+FUNÇÕES QUE CONHECEMOS:
+
+reverse [] = [] -- reverse.1
+reverse (x:xs) = reverse xs ++ [x] -- reverse.2
+
+[] ++ ys = ys -- ++.1
+(x:xs) ++ ys = x:(xs++ys) -- ++.2
+
+
+(+) :: Nat -> Nat -> Nat
+Zero + m = m -- +.1
+Succ n + m = Succ (n + m) -- +.2
+
+length :: [a] -> Int
+length [] = 0 -- length.1
+length (x:xs) = 1 + length xs -- length.2
+
+
+replicate :: Int -> a -> [a]
+replicate 0 x = [] -- replicate.1
+replicate n x | n>0
+= x : replicate (n-1) x -- replicate.2
